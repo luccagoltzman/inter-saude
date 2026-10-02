@@ -1,4 +1,24 @@
 (() => {
+  if ("scrollRestoration" in history) {
+    history.scrollRestoration = "manual";
+  }
+
+  const navEntry = performance.getEntriesByType("navigation")[0];
+  const isReload = navEntry?.type === "reload";
+
+  if (isReload && window.location.hash) {
+    history.replaceState(
+      null,
+      "",
+      window.location.pathname + window.location.search
+    );
+  }
+
+  if (isReload || !window.location.hash) {
+    window.scrollTo(0, 0);
+    requestAnimationFrame(() => window.scrollTo(0, 0));
+  }
+
   const header = document.getElementById("header");
   const menuBtn = document.getElementById("menu-btn");
   const mobileNav = document.getElementById("mobile-nav");
