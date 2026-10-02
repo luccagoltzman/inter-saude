@@ -445,7 +445,7 @@ button {
   gap: clamp(1.25rem, 2.5vw, 2rem);
   width: max-content;
   will-change: transform;
-  padding-right: clamp(1.5rem, 5vw, 4rem);
+  padding-right: 0;
 }
 
 .diff-row {
@@ -455,30 +455,35 @@ button {
   align-items: center;
   flex: 0 0 min(82vw, 1000px);
   min-height: min(58vh, 520px);
-  padding-right: clamp(1rem, 3vw, 2.5rem);
+  padding-right: clamp(0.75rem, 2vw, 1.5rem);
   box-sizing: border-box;
-  opacity: 0;
-  transform: translate3d(72px, 0, 0);
-  transition:
-    opacity 0.55s var(--ease),
-    transform 0.55s var(--ease);
+  opacity: 1;
+  transform: translate3d(48px, 0, 0);
+  transition: transform 0.55s var(--ease);
 }
 
 .diff-row.is-visible {
-  opacity: 1;
   transform: translate3d(0, 0, 0);
 }
 
 .diff-row:last-child {
-  padding-right: clamp(2rem, 6vw, 5rem);
+  padding-right: 0;
 }
 
 .diff-text {
-  padding-right: 0.5rem;
+  padding-right: clamp(0.75rem, 3vw, 2rem);
 }
 
 .diff-row:last-child .diff-text {
-  padding-right: clamp(1rem, 4vw, 3rem);
+  padding-right: clamp(0.75rem, 3vw, 2rem);
+}
+
+.diff-img {
+  width: min(72%, 360px);
+  height: auto;
+  filter:
+    hue-rotate(164deg) saturate(1.15)
+    drop-shadow(0 18px 30px rgba(0, 0, 0, 0.12));
 }
 
 .diff-media {
@@ -500,13 +505,6 @@ button {
 
 .panel-coral {
   background: linear-gradient(160deg, #ff8a5c, #ff6534);
-}
-
-.diff-img {
-  width: min(72%, 360px);
-  filter:
-    hue-rotate(164deg) saturate(1.15)
-    drop-shadow(0 18px 30px rgba(0, 0, 0, 0.12));
 }
 
 .diff-text h3 {

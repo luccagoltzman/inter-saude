@@ -148,11 +148,10 @@
       total
     );
     const progress = reduceMotion ? 0 : scrolled / total;
-    const viewport = diffTrack.parentElement;
-    const maxTranslate = Math.max(
-      diffTrack.scrollWidth - (viewport?.clientWidth || 0),
-      0
-    );
+
+    // Alinha o início do último card à esquerda da área útil (ignora padding do viewport)
+    const last = diffPanels[diffPanels.length - 1];
+    const maxTranslate = Math.max(0, last.offsetLeft);
 
     diffTrack.style.transform = `translate3d(${-progress * maxTranslate}px, 0, 0)`;
 
@@ -161,22 +160,14 @@
       Math.round(progress * (diffPanels.length - 1))
     );
 
-    diffPanels.forEach((panel, i) => {
-      if (reduceMotion || i <= idx) panel.classList.add("is-visible");
-    });
-
     const dots = diffDots ? [...diffDots.children] : [];
     dots.forEach((dot, i) => {
       dot.classList.toggle("is-active", i === idx);
     });
   };
 
-  // First panel visible on load when section is approached
-  if (reduceMotion) {
-    diffPanels.forEach((panel) => panel.classList.add("is-visible"));
-  } else {
-    diffPanels[0]?.classList.add("is-visible");
-  }
+  // Cards já nascem visíveis (texto/imagem não ficam opacity:0 esperando scroll)
+  diffPanels.forEach((panel) => panel.classList.add("is-visible"));
 
   const onScrollSync = () => {
     syncPillScroll();
