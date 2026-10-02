@@ -473,43 +473,66 @@ button {
 .stats {
   background: var(--ink);
   color: var(--white);
-  padding: 5rem 4vw 0;
+  padding: 0;
   overflow: hidden;
 }
 
 .stats-inner {
   display: grid;
-  grid-template-columns: 0.9fr 1.1fr;
-  gap: 2rem;
-  align-items: end;
-  max-width: 1400px;
-  margin: 0 auto;
+  grid-template-columns: minmax(280px, 0.85fr) minmax(380px, 1.3fr);
+  gap: 0;
+  align-items: stretch;
+  max-width: none;
+  margin: 0;
+  min-height: min(78vh, 720px);
+}
+
+.stats-copy {
+  padding: clamp(2.5rem, 5vh, 4rem) 4vw;
+  max-width: 34rem;
+  margin-left: auto;
+  width: 100%;
+  align-self: center;
+  box-sizing: border-box;
 }
 
 .stats-title {
   margin: 0;
-  font-size: clamp(2.4rem, 5vw, 4.4rem);
-  line-height: 0.98;
-  letter-spacing: -0.05em;
+  font-size: clamp(2rem, 3.8vw, 3.4rem);
+  line-height: 1.02;
+  letter-spacing: -0.04em;
   font-weight: 700;
 }
 
 .stats-text {
-  margin: 1.25rem 0 3rem;
+  margin: 1rem 0 0;
   max-width: 28rem;
-  font-size: 1.15rem;
+  font-size: 1.1rem;
   line-height: 1.4;
   color: rgba(255, 255, 255, 0.78);
 }
 
 .stats-stage {
   position: relative;
-  min-height: 420px;
+  min-height: 100%;
+  max-height: none;
+  height: auto;
+  display: flex;
+  align-items: stretch;
+  justify-content: stretch;
+  background: var(--red);
+  overflow: visible;
 }
 
 .bottle {
-  width: min(100%, 720px);
-  margin-left: auto;
+  width: 100%;
+  height: 100%;
+  max-width: none;
+  max-height: none;
+  min-height: min(78vh, 720px);
+  object-fit: cover;
+  object-position: center center;
+  margin: 0;
   position: relative;
   z-index: 1;
   filter: hue-rotate(164deg) saturate(1.15);
@@ -523,15 +546,17 @@ button {
 }
 
 .cap {
-  width: 18%;
+  width: 16%;
+  max-width: 96px;
   top: 8%;
-  right: 8%;
+  right: 6%;
 }
 
 .pill {
-  width: 14%;
-  bottom: 22%;
-  left: 8%;
+  width: 12%;
+  max-width: 72px;
+  bottom: 14%;
+  left: 4%;
 }
 
 .float-a {
@@ -776,6 +801,24 @@ button {
     grid-template-columns: 1fr;
   }
 
+  .stats-inner {
+    min-height: 0;
+  }
+
+  .stats-copy {
+    margin-left: 0;
+    max-width: none;
+    padding: 3rem 5vw 1.5rem;
+  }
+
+  .stats-stage {
+    min-height: min(52vh, 420px);
+  }
+
+  .bottle {
+    min-height: min(52vh, 420px);
+  }
+
   .diff-row.reverse .diff-text {
     order: 0;
   }
@@ -870,8 +913,25 @@ button {
     grid-template-columns: repeat(2, 1fr);
   }
 
+  .stats-inner {
+    grid-template-columns: 1fr;
+    min-height: 0;
+  }
+
+  .stats-copy {
+    margin-left: 0;
+    max-width: none;
+    padding: 3rem 5vw 1.5rem;
+  }
+
   .stats-stage {
-    min-height: 280px;
+    min-height: min(52vh, 420px);
+    height: min(52vh, 420px);
+  }
+
+  .bottle {
+    height: 100%;
+    object-fit: cover;
   }
 
   .pill-scroll {
