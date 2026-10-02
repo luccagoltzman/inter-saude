@@ -94,12 +94,13 @@
     document.getElementById("footer-fallback")
   );
 
-  const pillSection = document.querySelector(".pill-scroll");
-  const pillTrack = document.getElementById("pill-track");
-  const pillTexts = [...document.querySelectorAll("#pill-texts h3")];
   const reduceMotion = window.matchMedia(
     "(prefers-reduced-motion: reduce)"
   ).matches;
+
+  const pillSection = document.querySelector(".pill-scroll");
+  const pillTrack = document.getElementById("pill-track");
+  const pillTexts = [...document.querySelectorAll("#pill-texts h3")];
 
   const syncPillScroll = () => {
     if (!pillSection || !pillTrack) return;
@@ -127,7 +128,62 @@
     });
   };
 
-  syncPillScroll();
-  window.addEventListener("scroll", syncPillScroll, { passive: true });
-  window.addEventListener("resize", syncPillScroll);
+  const diffPin = document.querySelector(".diff-pin");
+  const diffTrack = document.getElementById("diff-track");
+  const diffPanels = [...document.querySelectorAll("[data-diff-panel]")];
+  const diffDots = document.getElementById("diff-dots");
+
+  if (diffDots && diffPanels.length) {
+    diffDots.innerHTML = diffPanels
+      .map((_, i) => `<span${i === 0 ? ' class="is-active"' : ""}></span>`)
+      .join("");
+  }
+
+  const syncDiffScroll = () => {
+    if (!diffPin || !diffTrack || !diffPanels.length) return;
+
+    const total = Math.max(diffPin.offsetHeight - window.innerHeight, 1);
+    const scrolled = Math.min(
+      Math.max(-diffPin.getBoundingClientRect().top, 0),
+      total
+    );
+    const progress = reduceMotion ? 0 : scrolled / total;
+    const viewport = diffTrack.parentElement;
+    const maxTranslate = Math.max(
+      diffTrack.scrollWidth - (viewport?.clientWidth || 0),
+      0
+    );
+
+    diffTrack.style.transform = `translate3d(${-progress * maxTranslate}px, 0, 0)`;
+
+    const idx = Math.min(
+      diffPanels.length - 1,
+      Math.round(progress * (diffPanels.length - 1))
+    );
+
+    diffPanels.forEach((panel, i) => {
+      if (reduceMotion || i <= idx) panel.classList.add("is-visible");
+    });
+
+    const dots = diffDots ? [...diffDots.children] : [];
+    dots.forEach((dot, i) => {
+      dot.classList.toggle("is-active", i === idx);
+    });
+  };
+
+  // First panel visible on load when section is approached
+  if (reduceMotion) {
+    diffPanels.forEach((panel) => panel.classList.add("is-visible"));
+  } else {
+    diffPanels[0]?.classList.add("is-visible");
+  }
+
+  const onScrollSync = () => {
+    syncPillScroll();
+    syncDiffScroll();
+  };
+
+  onScrollSync();
+  window.addEventListener("scroll", onScrollSync, { passive: true });
+  window.addEventListener("resize", onScrollSync);
 })();

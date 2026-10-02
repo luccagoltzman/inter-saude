@@ -357,10 +357,13 @@ button {
 }
 
 .about,
-.diff,
 .portfolio,
 .contact {
   padding: 7.5rem 4vw;
+}
+
+.diff {
+  padding: 0;
 }
 
 .about-grid {
@@ -403,34 +406,85 @@ button {
   filter: hue-rotate(164deg) saturate(1.15);
 }
 
-.diff-header {
-  max-width: 40rem;
-  margin-bottom: 3.5rem;
+.diff-pin {
+  height: 320vh;
 }
 
-.diff-rows {
-  display: grid;
-  gap: 2.5rem;
+.diff-sticky {
+  position: sticky;
+  top: 0;
+  height: 100vh;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  gap: 1.75rem;
+  padding: calc(var(--header-h) + 1rem) 0 2rem;
+  overflow: hidden;
+  background:
+    radial-gradient(900px 420px at 90% 20%, rgba(255, 101, 52, 0.12), transparent 60%),
+    linear-gradient(180deg, #fff6f2 0%, #fffafa 100%);
+}
+
+.diff-header {
+  max-width: 40rem;
+  margin: 0 4vw 0.5rem;
+  flex-shrink: 0;
+}
+
+.diff-viewport {
+  width: 100%;
+  overflow: hidden;
+  padding-left: 4vw;
+  padding-right: 4vw;
+  box-sizing: border-box;
+}
+
+.diff-track {
+  display: flex;
+  align-items: stretch;
+  gap: clamp(1.25rem, 2.5vw, 2rem);
+  width: max-content;
+  will-change: transform;
+  padding-right: clamp(1.5rem, 5vw, 4rem);
 }
 
 .diff-row {
   display: grid;
-  grid-template-columns: 1.1fr 0.9fr;
-  gap: 2.5rem;
+  grid-template-columns: 1.05fr 0.95fr;
+  gap: clamp(1.25rem, 2.5vw, 2.5rem);
   align-items: center;
+  flex: 0 0 min(82vw, 1000px);
+  min-height: min(58vh, 520px);
+  padding-right: clamp(1rem, 3vw, 2.5rem);
+  box-sizing: border-box;
+  opacity: 0;
+  transform: translate3d(72px, 0, 0);
+  transition:
+    opacity 0.55s var(--ease),
+    transform 0.55s var(--ease);
 }
 
-.diff-row.reverse {
-  grid-template-columns: 0.9fr 1.1fr;
+.diff-row.is-visible {
+  opacity: 1;
+  transform: translate3d(0, 0, 0);
 }
 
-.diff-row.reverse .diff-text {
-  order: -1;
+.diff-row:last-child {
+  padding-right: clamp(2rem, 6vw, 5rem);
+}
+
+.diff-text {
+  padding-right: 0.5rem;
+}
+
+.diff-row:last-child .diff-text {
+  padding-right: clamp(1rem, 4vw, 3rem);
 }
 
 .diff-media {
   border-radius: var(--radius);
-  min-height: 320px;
+  min-height: min(48vh, 420px);
+  height: 100%;
   display: grid;
   place-items: center;
   overflow: hidden;
@@ -468,6 +522,26 @@ button {
   line-height: 1.45;
   color: var(--ink-soft);
   max-width: 28rem;
+}
+
+.diff-dots {
+  display: flex;
+  gap: 0.55rem;
+  padding: 0 4vw;
+  flex-shrink: 0;
+}
+
+.diff-dots span {
+  width: 8px;
+  height: 8px;
+  border-radius: 999px;
+  background: rgba(30, 31, 40, 0.18);
+  transition: width 0.35s var(--ease), background 0.35s ease;
+}
+
+.diff-dots span.is-active {
+  width: 28px;
+  background: var(--red);
 }
 
 .stats {
@@ -795,8 +869,6 @@ button {
 
 @media (max-width: 1024px) {
   .about-grid,
-  .diff-row,
-  .diff-row.reverse,
   .stats-inner {
     grid-template-columns: 1fr;
   }
@@ -819,8 +891,19 @@ button {
     min-height: min(52vh, 420px);
   }
 
-  .diff-row.reverse .diff-text {
-    order: 0;
+  .diff-row {
+    grid-template-columns: 1fr;
+    flex-basis: min(88vw, 520px);
+    min-height: auto;
+  }
+
+  .diff-media {
+    min-height: 240px;
+    height: 240px;
+  }
+
+  .diff-pin {
+    height: 280vh;
   }
 
   .hero-layout {
@@ -899,14 +982,14 @@ button {
   }
 
   .about,
-  .diff,
   .portfolio,
   .contact {
     padding: 5rem 5vw;
   }
 
   .diff-media {
-    min-height: 240px;
+    min-height: 220px;
+    height: 220px;
   }
 
   .portfolio-grid {
@@ -952,6 +1035,12 @@ button {
   }
 
   .reveal {
+    opacity: 1;
+    transform: none;
+    transition: none;
+  }
+
+  .diff-row {
     opacity: 1;
     transform: none;
     transition: none;
