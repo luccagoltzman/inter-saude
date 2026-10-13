@@ -201,7 +201,9 @@
 
   // Arraste para girar (ação direta do usuário — mantido mesmo em reduced-motion)
   // + clique (sem arrastar) para fechar e reabrir a cápsula de novo.
-  canvas.style.touchAction = "none";
+  // pan-y: deixa o navegador rolar a página num gesto vertical; só um arraste
+  // predominantemente horizontal é "roubado" pelo JS para girar a cápsula.
+  canvas.style.touchAction = "pan-y";
   canvas.classList.add("is-draggable");
 
   const dragOffset = { x: 0, y: 0 };
