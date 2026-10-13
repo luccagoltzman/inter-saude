@@ -4,7 +4,6 @@
 // Módulo independente de main.js — se qualquer checagem de capacidade falhar,
 // o <img id="hero-pills-fallback"> original continua visível.
 (async () => {
-  window.__marker = "top";
   const canvas = document.getElementById("hero-canvas");
   const fallbackImg = document.getElementById("hero-pills-fallback");
   const heroVisual = document.querySelector(".hero-visual");
@@ -12,9 +11,6 @@
 
   const reduceMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
   const isCoarsePointer = window.matchMedia("(pointer: coarse)").matches;
-  const isSmallViewport = window.innerWidth < 768;
-
-  if (isCoarsePointer && isSmallViewport) return; // mobile/low-power: mantém o PNG
 
   const supportsWebGL = (() => {
     try {
@@ -54,7 +50,8 @@
     alpha: true,
     powerPreference: "high-performance",
   });
-  renderer.setPixelRatio(Math.min(window.devicePixelRatio || 1, 2));
+  // teto de pixel ratio mais baixo em touch: menos carga de GPU/bateria em celulares
+  renderer.setPixelRatio(Math.min(window.devicePixelRatio || 1, isCoarsePointer ? 1.5 : 2));
   renderer.toneMapping = THREE.ACESFilmicToneMapping;
   renderer.toneMappingExposure = 1;
 
@@ -263,8 +260,6 @@
   let rafId = null;
   let running = false;
 
-  window.__heroDebug = () => ({ openT, targetOpenT, running, introScheduled, awaitingReopen });
-
   function animate() {
     rafId = requestAnimationFrame(animate);
     const dt = Math.min(clock.getDelta(), 0.1);
@@ -359,5 +354,4 @@
   // Sucesso: esconde o PNG, o canvas assume.
   fallbackImg.classList.add("is-hidden");
   canvas.classList.add("is-ready");
-  window.__marker = "bottom";
 })();
