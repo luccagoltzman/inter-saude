@@ -9,6 +9,14 @@
   <link rel="apple-touch-icon" href="images/favicon.png?v=2">
   <link rel="preload" as="image" href="images/medical_case-1.png" fetchpriority="high">
   <link rel="stylesheet" href="css/styles.css">
+  <script type="importmap">
+    {
+      "imports": {
+        "three": "https://cdn.jsdelivr.net/npm/three@0.169.0/build/three.module.js",
+        "three/addons/": "https://cdn.jsdelivr.net/npm/three@0.169.0/examples/jsm/"
+      }
+    }
+  </script>
   <script>
     (function () {
       try {
@@ -26,6 +34,9 @@
   </script>
 </head>
 <body>
+  <div class="grain-overlay" aria-hidden="true"></div>
+  <div class="cursor-dot" id="cursor-dot" aria-hidden="true"></div>
+
   <header class="header" id="header">
     <a href="#topo" class="brand" aria-label="InterSaúde Distribuidora de Medicamento">
       <img src="images/logo.png" alt="InterSaúde Distribuidora de Medicamento" class="brand-logo" id="brand-logo" width="220" height="56">
@@ -36,7 +47,7 @@
       <a href="#sobre">Sobre</a>
       <a href="#diferenciais">Diferenciais</a>
       <a href="#portfolio">Portfólio</a>
-      <a href="#contato" class="nav-cta">Falar conosco</a>
+      <a href="#contato" class="nav-cta magnetic">Falar conosco</a>
     </nav>
 
     <button class="menu-btn" id="menu-btn" type="button" aria-label="Abrir menu" aria-expanded="false">
@@ -49,7 +60,7 @@
     <a href="#sobre">Sobre</a>
     <a href="#diferenciais">Diferenciais</a>
     <a href="#portfolio">Portfólio</a>
-    <a href="#contato" class="nav-cta">Falar conosco</a>
+    <a href="#contato" class="nav-cta magnetic">Falar conosco</a>
   </div>
 
   <main id="topo">
@@ -61,17 +72,18 @@
           <h1 class="hero-brand reveal">InterSaúde</h1>
           <p class="hero-lead reveal">Medicamentos certos, na hora certa, para quem cuida de pessoas.</p>
           <div class="hero-actions reveal">
-            <a href="#contato" class="btn btn-primary">Solicitar atendimento</a>
-            <a href="#sobre" class="btn btn-ghost">Conhecer a empresa</a>
+            <a href="#contato" class="btn btn-primary magnetic">Solicitar atendimento</a>
+            <a href="#sobre" class="btn btn-ghost magnetic">Conhecer a empresa</a>
           </div>
         </div>
         <div class="hero-visual reveal" aria-hidden="true">
-          <img src="images/pills.png" alt="" class="hero-pills">
+          <canvas id="hero-canvas" class="hero-canvas"></canvas>
+          <img src="images/pills.png" alt="" class="hero-pills" id="hero-pills-fallback">
         </div>
       </div>
     </section>
 
-    <section class="about" id="sobre">
+    <section class="about glow-reactive" id="sobre">
       <div class="about-grid">
         <div class="about-copy">
           <p class="eyebrow reveal">Quem somos</p>
@@ -140,7 +152,7 @@
           <h2 class="stats-title">Pronta para abastecer o cuidado em escala</h2>
           <p class="stats-text">Menos ruptura, mais previsibilidade e um canal de distribuição focado em saúde.</p>
         </div>
-        <div class="stats-stage reveal" aria-hidden="true">
+        <div class="stats-stage tilt-card reveal" aria-hidden="true">
           <img src="images/bottle-with-pills.png" alt="" class="bottle">
           <img src="images/cap.png" alt="" class="cap float-a">
           <img src="images/pill.png" alt="" class="pill float-b">
@@ -156,18 +168,18 @@
       </div>
 
       <div class="portfolio-grid reveal">
-        <figure class="folio"><img src="images/preview/preview-2.png" alt="Frasco com comprimidos"><figcaption>Medicamentos</figcaption></figure>
-        <figure class="folio"><img src="images/preview/preview-19.png" alt="Cartela de comprimidos"><figcaption>Genéricos</figcaption></figure>
-        <figure class="folio"><img src="images/preview/preview-13.png" alt="Estetoscópio"><figcaption>Clínicas</figcaption></figure>
-        <figure class="folio"><img src="images/preview/preview-14.png" alt="Seringa"><figcaption>Injetáveis</figcaption></figure>
-        <figure class="folio"><img src="images/preview/preview-24.png" alt="Maleta médica"><figcaption>Hospitalar</figcaption></figure>
-        <figure class="folio"><img src="images/preview/preview-26.png" alt="Coração"><figcaption>Cardiologia</figcaption></figure>
-        <figure class="folio"><img src="images/preview/preview-37.png" alt="Vitaminas"><figcaption>Suplementos</figcaption></figure>
-        <figure class="folio"><img src="images/preview/preview-1.png" alt="Monitor"><figcaption>Monitoramento</figcaption></figure>
-        <figure class="folio"><img src="images/preview/preview-31.png" alt="Ambulância"><figcaption>Urgência</figcaption></figure>
-        <figure class="folio"><img src="images/preview/preview-32.png" alt="DNA"><figcaption>Especialidades</figcaption></figure>
-        <figure class="folio"><img src="images/preview/preview-11.png" alt="Cruz médica"><figcaption>Farmácias</figcaption></figure>
-        <figure class="folio"><img src="images/preview/preview-27.png" alt="Sinal hospitalar"><figcaption>Redes</figcaption></figure>
+        <figure class="folio tilt-card"><img src="images/preview/preview-2.png" alt="Frasco com comprimidos"><figcaption>Medicamentos</figcaption></figure>
+        <figure class="folio tilt-card"><img src="images/preview/preview-19.png" alt="Cartela de comprimidos"><figcaption>Genéricos</figcaption></figure>
+        <figure class="folio tilt-card"><img src="images/preview/preview-13.png" alt="Estetoscópio"><figcaption>Clínicas</figcaption></figure>
+        <figure class="folio tilt-card"><img src="images/preview/preview-14.png" alt="Seringa"><figcaption>Injetáveis</figcaption></figure>
+        <figure class="folio tilt-card"><img src="images/preview/preview-24.png" alt="Maleta médica"><figcaption>Hospitalar</figcaption></figure>
+        <figure class="folio tilt-card"><img src="images/preview/preview-26.png" alt="Coração"><figcaption>Cardiologia</figcaption></figure>
+        <figure class="folio tilt-card"><img src="images/preview/preview-37.png" alt="Vitaminas"><figcaption>Suplementos</figcaption></figure>
+        <figure class="folio tilt-card"><img src="images/preview/preview-1.png" alt="Monitor"><figcaption>Monitoramento</figcaption></figure>
+        <figure class="folio tilt-card"><img src="images/preview/preview-31.png" alt="Ambulância"><figcaption>Urgência</figcaption></figure>
+        <figure class="folio tilt-card"><img src="images/preview/preview-32.png" alt="DNA"><figcaption>Especialidades</figcaption></figure>
+        <figure class="folio tilt-card"><img src="images/preview/preview-11.png" alt="Cruz médica"><figcaption>Farmácias</figcaption></figure>
+        <figure class="folio tilt-card"><img src="images/preview/preview-27.png" alt="Sinal hospitalar"><figcaption>Redes</figcaption></figure>
       </div>
     </section>
 
@@ -198,13 +210,13 @@
     </section>
 
     <section class="contact" id="contato">
-      <div class="contact-panel reveal">
+      <div class="contact-panel glow-reactive reveal">
         <p class="eyebrow light">Próximo passo</p>
         <h2 class="contact-title">Vamos abastecer o seu ponto de saúde</h2>
         <p class="contact-text">Fale com a InterSaúde e receba atendimento comercial personalizado para farmácias, clínicas e redes.</p>
         <div class="contact-actions">
-          <a href="mailto:contato@intersaude.com.br" class="btn btn-light">contato@intersaude.com.br</a>
-          <a href="https://wa.me/5500000000000" class="btn btn-outline-light" target="_blank" rel="noopener">WhatsApp comercial</a>
+          <a href="mailto:contato@intersaude.com.br" class="btn btn-light magnetic">contato@intersaude.com.br</a>
+          <a href="https://wa.me/5500000000000" class="btn btn-outline-light magnetic" target="_blank" rel="noopener">WhatsApp comercial</a>
         </div>
         <p class="contact-note">Atualize e-mail e WhatsApp com os canais oficiais da distribuidora.</p>
       </div>
@@ -227,5 +239,6 @@
   </footer>
 
   <script src="js/main.js"></script>
+  <script type="module" src="js/hero-scene.js"></script>
 </body>
 </html>

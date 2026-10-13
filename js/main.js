@@ -177,4 +177,59 @@
   onScrollSync();
   window.addEventListener("scroll", onScrollSync, { passive: true });
   window.addEventListener("resize", onScrollSync);
+
+  // --- Polimento: cursor customizado, botões magnéticos, glow e tilt 3D ---
+  const isCoarsePointer = window.matchMedia("(pointer: coarse)").matches;
+
+  if (!reduceMotion && !isCoarsePointer) {
+    const cursorDot = document.getElementById("cursor-dot");
+    if (cursorDot) {
+      window.addEventListener(
+        "pointermove",
+        (e) => {
+          cursorDot.style.transform = `translate3d(${e.clientX}px, ${e.clientY}px, 0)`;
+          cursorDot.classList.add("is-active");
+        },
+        { passive: true }
+      );
+      document.querySelectorAll("a, button, #hero-canvas").forEach((el) => {
+        el.addEventListener("pointerenter", () => cursorDot.classList.add("is-hover"));
+        el.addEventListener("pointerleave", () => cursorDot.classList.remove("is-hover"));
+      });
+    }
+
+    document.querySelectorAll(".magnetic").forEach((btn) => {
+      btn.addEventListener("pointermove", (e) => {
+        const rect = btn.getBoundingClientRect();
+        const dx = e.clientX - (rect.left + rect.width / 2);
+        const dy = e.clientY - (rect.top + rect.height / 2);
+        btn.style.transform = `translate(${dx * 0.22}px, ${dy * 0.28}px)`;
+      });
+      btn.addEventListener("pointerleave", () => {
+        btn.style.transform = "";
+      });
+    });
+
+    document.querySelectorAll(".glow-reactive").forEach((el) => {
+      el.addEventListener("pointermove", (e) => {
+        const rect = el.getBoundingClientRect();
+        el.style.setProperty("--mx", `${e.clientX - rect.left}px`);
+        el.style.setProperty("--my", `${e.clientY - rect.top}px`);
+      });
+    });
+
+    document.querySelectorAll(".tilt-card").forEach((card) => {
+      card.addEventListener("pointermove", (e) => {
+        const rect = card.getBoundingClientRect();
+        const px = (e.clientX - rect.left) / rect.width - 0.5;
+        const py = (e.clientY - rect.top) / rect.height - 0.5;
+        card.style.setProperty("--tiltY", `${px * 14}deg`);
+        card.style.setProperty("--tiltX", `${-py * 14}deg`);
+      });
+      card.addEventListener("pointerleave", () => {
+        card.style.setProperty("--tiltX", "0deg");
+        card.style.setProperty("--tiltY", "0deg");
+      });
+    });
+  }
 })();

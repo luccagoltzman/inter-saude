@@ -1,6 +1,6 @@
 # InterSaúde — Landing Page
 
-Landing page estática da **InterSaúde Distribuidora de Medicamento**: HTML, CSS e JavaScript vanilla, sem bundler. Visual farmacêutico premium (ícones 3D, tipografia Aventa, vermelho da marca) com scroll cinematográfico em seções-chave.
+Landing page estática da **InterSaúde Distribuidora de Medicamento**: HTML, CSS e JavaScript vanilla, sem bundler. Visual farmacêutico premium (ícones 3D, tipografia Aventa, vermelho da marca) com scroll cinematográfico em seções-chave, cena **WebGL 3D real** no hero (Three.js via CDN) e camada de polimento (grain, cursor customizado, botões magnéticos, tilt 3D, glow reativo ao cursor).
 
 ---
 
@@ -25,9 +25,10 @@ A tipografia **Aventa** (Medium/Bold) carrega o tom editorial do clone Pharma or
 
 ```
 inter-saude/
-├── index.html          # Marcação semântica + script anti-reload-hash
-├── css/styles.css      # Design tokens, layout, motion, responsivo
-├── js/main.js          # Menu, reveal, scroll sync (diff + pills), logo
+├── index.html          # Marcação semântica + importmap do Three.js + script anti-reload-hash
+├── css/styles.css      # Design tokens, layout, motion, responsivo, polimento (grain/cursor/tilt)
+├── js/main.js          # Menu, reveal, scroll sync (diff + pills), logo, cursor/magnético/tilt/glow
+├── js/hero-scene.js    # Cena WebGL (Three.js) de cápsulas 3D no hero, com fallback para PNG
 ├── fonts/              # Aventa-Medium.otf, Aventa-Bold.otf
 ├── images/             # Logo, favicon, renders 3D, preview/
 └── README.md
@@ -36,10 +37,13 @@ inter-saude/
 | Camada | Papel |
 |---|---|
 | `index.html` | Seções âncora (`#sobre`, `#diferenciais`, `#portfolio`, `#contato`, `#cores`) |
-| `css/styles.css` | Tokens CSS (`:root`), sticky/pin, grids, filtros de cor nos PNGs |
-| `js/main.js` | Estado do menu, `IntersectionObserver`, `translate3d` ligado ao scroll |
+| `css/styles.css` | Tokens CSS (`:root`), sticky/pin, grids, filtros de cor nos PNGs, polimento visual |
+| `js/main.js` | Estado do menu, `IntersectionObserver`, `translate3d` ligado ao scroll, cursor/magnético/tilt/glow |
+| `js/hero-scene.js` | Cena Three.js independente (ES module), com gate de capacidade e fallback |
 
-Sem dependências npm obrigatórias. Qualquer servidor estático serve.
+Sem dependências npm obrigatórias — qualquer servidor estático serve. A única dependência externa é o **Three.js via CDN** (jsDelivr, versão fixada `0.169.0`, carregado por importmap), usado só no hero; se a CDN ou o WebGL não estiverem disponíveis, o hero cai automaticamente no PNG original (`images/pills.png`), sem erro visível.
+
+**Importante:** como `js/hero-scene.js` é um ES module com importmap, ele só funciona servido via `http://`/`https://` — abrir `index.html` direto com `file://` não carrega a cena 3D (o resto da página funciona normalmente, cai no fallback).
 
 ---
 
@@ -64,9 +68,10 @@ npx serve .
 - Nav desktop; menu full-screen no mobile (`#mobile-nav` + atributo `hidden` respeitado via CSS).
 
 ### 2. Hero
-- Grid 2 colunas: copy à esquerda, `pills.png` à direita (sem corte por `overflow`/`right` negativo).
+- Grid 2 colunas: copy à esquerda, arte 3D à direita (sem corte por `overflow`/`right` negativo).
 - Glow radial vermelho atrás da arte.
-- Cápsula com `hue-rotate` para alinhar ao vermelho da marca + `floatY`.
+- **Cena WebGL (`js/hero-scene.js`)**: 5–9 cápsulas 3D (`THREE.CapsuleGeometry`) em vermelho/creme da marca, material PBR com clearcoat, luz de 3 pontos + ambiente procedural (`RoomEnvironment`, sem HDRI externo), bloom sutil (`UnrealBloomPass`). Rotação/float contínuos, parallax de mouse (lerp) e fade ao sair da viewport; pausa real do `requestAnimationFrame` fora da tela ou com a aba oculta.
+- **Fallback**: se não houver WebGL, em `prefers-reduced-motion` o visual fica estático (sem animação) mas continua 3D; em mobile/ponteiro grosseiro ou se a CDN falhar, volta para `pills.png` com o tratamento `hue-rotate` + `floatY` original.
 
 ### 3. Sobre (`#sobre`)
 - Texto + render (`toothpaste-open.png`), reveal ao entrar no viewport.
