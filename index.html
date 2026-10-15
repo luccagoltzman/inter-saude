@@ -9,7 +9,60 @@
   <link rel="icon" href="images/favicon.png?v=2" type="image/png">
   <link rel="apple-touch-icon" href="images/favicon.png?v=2">
   <link rel="preload" as="image" href="images/medical_case-1.png" fetchpriority="high">
+
+  <!-- TODO: trocar "https://intersaude.com.br/" pelo domínio real antes de publicar -->
+  <meta property="og:type" content="website">
+  <meta property="og:locale" content="pt_BR">
+  <meta property="og:site_name" content="InterSaúde">
+  <meta property="og:title" content="InterSaúde — Distribuição de Medicamentos">
+  <meta property="og:description" content="Medicamentos certos, na hora certa. Atendimento comercial para farmácias, clínicas e redes de saúde.">
+  <meta property="og:image" content="https://intersaude.com.br/images/og-image.png">
+  <meta property="og:image:width" content="1200">
+  <meta property="og:image:height" content="630">
+  <meta property="og:url" content="https://intersaude.com.br/">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="InterSaúde — Distribuição de Medicamentos">
+  <meta name="twitter:description" content="Medicamentos certos, na hora certa. Atendimento comercial para farmácias, clínicas e redes de saúde.">
+  <meta name="twitter:image" content="https://intersaude.com.br/images/og-image.png">
+
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "Organization",
+    "name": "InterSaúde Distribuidora de Medicamento",
+    "url": "https://intersaude.com.br/",
+    "logo": "https://intersaude.com.br/images/logo.png",
+    "contactPoint": {
+      "@type": "ContactPoint",
+      "telephone": "+55-00-00000-0000",
+      "contactType": "comercial",
+      "areaServed": "BR",
+      "availableLanguage": "Portuguese"
+    }
+  }
+  </script>
+
   <link rel="stylesheet" href="css/styles.css">
+
+  <!-- Analytics: placeholders seguros — IDs falsos não geram erro, só não reportam até serem substituídos -->
+  <script async src="https://www.googletagmanager.com/gtag/js?id=G-XXXXXXXXXX"></script>
+  <script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag() { dataLayer.push(arguments); }
+    gtag("js", new Date());
+    gtag("config", "G-XXXXXXXXXX");
+  </script>
+  <script>
+    !function (f, b, e, v, n, t, s) {
+      if (f.fbq) return; n = f.fbq = function () { n.callMethod ? n.callMethod.apply(n, arguments) : n.queue.push(arguments) };
+      if (!f._fbq) f._fbq = n; n.push = n; n.loaded = !0; n.version = "2.0";
+      n.queue = []; t = b.createElement(e); t.async = !0;
+      t.src = v; s = b.getElementsByTagName(e)[0];
+      s.parentNode.insertBefore(t, s);
+    }(window, document, "script", "https://connect.facebook.net/en_US/fbevents.js");
+    fbq("init", "0000000000000000");
+    fbq("track", "PageView");
+  </script>
   <script type="importmap">
     {
       "imports": {
@@ -48,6 +101,7 @@
       <a href="#sobre">Sobre</a>
       <a href="#diferenciais">Diferenciais</a>
       <a href="#portfolio">Portfólio</a>
+      <a href="#faq">FAQ</a>
       <a href="#contato" class="nav-cta magnetic">Falar conosco</a>
     </nav>
 
@@ -61,6 +115,7 @@
     <a href="#sobre">Sobre</a>
     <a href="#diferenciais">Diferenciais</a>
     <a href="#portfolio">Portfólio</a>
+    <a href="#faq">FAQ</a>
     <a href="#contato" class="nav-cta magnetic">Falar conosco</a>
   </div>
 
@@ -80,6 +135,27 @@
         <div class="hero-visual reveal" aria-hidden="true">
           <canvas id="hero-canvas" class="hero-canvas"></canvas>
           <img src="images/pills.png" alt="" class="hero-pills" id="hero-pills-fallback">
+        </div>
+      </div>
+    </section>
+
+    <section class="value-strip" aria-label="Diferenciais rápidos">
+      <div class="value-strip-inner">
+        <div class="value-item reveal">
+          <strong>Atendimento</strong>
+          <span>Consultivo, por telefone e WhatsApp</span>
+        </div>
+        <div class="value-item reveal">
+          <strong>Entrega</strong>
+          <span>Rastreada, com prazo confirmado</span>
+        </div>
+        <div class="value-item reveal">
+          <strong>Cadastro</strong>
+          <span>Simplificado, direto com o comercial</span>
+        </div>
+        <div class="value-item reveal">
+          <strong>Portfólio</strong>
+          <span>Amplo, do genérico à especialidade</span>
         </div>
       </div>
     </section>
@@ -184,6 +260,33 @@
       </div>
     </section>
 
+    <section class="testimonials" id="depoimentos">
+      <div class="testimonials-head">
+        <p class="eyebrow reveal">Quem já abastece com a gente</p>
+        <h2 class="section-title reveal">Confiança construída pedido a pedido</h2>
+      </div>
+      <div class="testimonials-track reveal" id="testimonials-track">
+        <blockquote class="testimonial-panel panel-coral">
+          <p>"[Depoimento real a coletar — substituir por um retorno real de cliente antes de publicar.]"</p>
+          <footer>— [Nome do cliente], [Farmácia / Clínica]</footer>
+        </blockquote>
+        <blockquote class="testimonial-panel panel-blue">
+          <img src="images/toothbrush.png" alt="" class="testimonial-render" aria-hidden="true">
+          <p>"[Depoimento real a coletar — substituir por um retorno real de cliente antes de publicar.]"</p>
+          <footer>— [Nome do cliente], [Farmácia / Clínica]</footer>
+        </blockquote>
+        <blockquote class="testimonial-panel panel-soft dark-text">
+          <p>"[Depoimento real a coletar — substituir por um retorno real de cliente antes de publicar.]"</p>
+          <footer>— [Nome do cliente], [Farmácia / Clínica]</footer>
+        </blockquote>
+      </div>
+      <div class="testimonials-nav">
+        <button type="button" class="testimonial-arrow" id="testimonial-prev" aria-label="Depoimento anterior">‹</button>
+        <div class="testimonial-dots" id="testimonial-dots" aria-hidden="true"></div>
+        <button type="button" class="testimonial-arrow" id="testimonial-next" aria-label="Próximo depoimento">›</button>
+      </div>
+    </section>
+
     <section class="pill-scroll" id="cores" aria-label="Cores e variedade">
       <div class="pill-scroll-sticky">
         <div class="pill-scroll-left">
@@ -210,16 +313,150 @@
       </div>
     </section>
 
+    <section class="faq" id="faq">
+      <div class="faq-head">
+        <p class="eyebrow reveal">Perguntas frequentes</p>
+        <h2 class="section-title reveal">Antes de pedir, tire suas dúvidas</h2>
+      </div>
+      <div class="faq-list reveal">
+        <div class="faq-item">
+          <button class="faq-q" type="button" aria-expanded="false">
+            <span class="faq-num">01</span>
+            <span class="faq-q-text">Qual o prazo de entrega?</span>
+            <span class="faq-toggle" aria-hidden="true">+</span>
+          </button>
+          <div class="faq-a-wrap">
+            <p class="faq-a">Os prazos variam por região e disponibilidade de estoque. No cadastro comercial, nossa equipe informa a previsão de entrega para o seu CEP antes da confirmação do pedido.</p>
+          </div>
+        </div>
+        <div class="faq-item">
+          <button class="faq-q" type="button" aria-expanded="false">
+            <span class="faq-num">02</span>
+            <span class="faq-q-text">Existe pedido mínimo?</span>
+            <span class="faq-toggle" aria-hidden="true">+</span>
+          </button>
+          <div class="faq-a-wrap">
+            <p class="faq-a">O pedido mínimo depende do perfil do estabelecimento e da região de entrega. Fale com o time comercial para confirmar as condições para o seu CNPJ.</p>
+          </div>
+        </div>
+        <div class="faq-item">
+          <button class="faq-q" type="button" aria-expanded="false">
+            <span class="faq-num">03</span>
+            <span class="faq-q-text">Quais formas de pagamento são aceitas?</span>
+            <span class="faq-toggle" aria-hidden="true">+</span>
+          </button>
+          <div class="faq-a-wrap">
+            <p class="faq-a">Trabalhamos com condições comerciais negociadas conforme o histórico e volume de compra. As opções disponíveis são apresentadas durante o cadastro.</p>
+          </div>
+        </div>
+        <div class="faq-item">
+          <button class="faq-q" type="button" aria-expanded="false">
+            <span class="faq-num">04</span>
+            <span class="faq-q-text">Quais regiões vocês atendem?</span>
+            <span class="faq-toggle" aria-hidden="true">+</span>
+          </button>
+          <div class="faq-a-wrap">
+            <p class="faq-a">Atendemos farmácias, clínicas e redes dentro da nossa área de cobertura logística. Informe sua cidade no formulário abaixo para confirmarmos o atendimento.</p>
+          </div>
+        </div>
+        <div class="faq-item">
+          <button class="faq-q" type="button" aria-expanded="false">
+            <span class="faq-num">05</span>
+            <span class="faq-q-text">Como faço para cadastrar meu CNPJ?</span>
+            <span class="faq-toggle" aria-hidden="true">+</span>
+          </button>
+          <div class="faq-a-wrap">
+            <p class="faq-a">Preencha o formulário de contato com os dados do seu negócio. Nossa equipe retorna com os documentos necessários para liberar o cadastro comercial.</p>
+          </div>
+        </div>
+        <div class="faq-item">
+          <button class="faq-q" type="button" aria-expanded="false">
+            <span class="faq-num">06</span>
+            <span class="faq-q-text">Em quanto tempo recebo retorno comercial?</span>
+            <span class="faq-toggle" aria-hidden="true">+</span>
+          </button>
+          <div class="faq-a-wrap">
+            <p class="faq-a">O time comercial entra em contato por telefone, e-mail ou WhatsApp em até 1 dia útil após o envio do formulário.</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
     <section class="contact" id="contato">
       <div class="contact-panel glow-reactive reveal">
         <p class="eyebrow light">Próximo passo</p>
         <h2 class="contact-title">Vamos abastecer o seu ponto de saúde</h2>
-        <p class="contact-text">Fale com a InterSaúde e receba atendimento comercial personalizado para farmácias, clínicas e redes.</p>
-        <div class="contact-actions">
-          <a href="mailto:contato@intersaude.com.br" class="btn btn-light magnetic">contato@intersaude.com.br</a>
-          <a href="https://wa.me/5500000000000" class="btn btn-outline-light magnetic" target="_blank" rel="noopener">WhatsApp comercial</a>
-        </div>
-        <p class="contact-note">Atualize e-mail e WhatsApp com os canais oficiais da distribuidora.</p>
+        <p class="contact-text">Preencha seus dados e receba atendimento comercial personalizado para farmácias, clínicas e redes — ou fale direto com a gente pelo WhatsApp.</p>
+
+        <form class="lead-form" id="lead-form" action="https://formspree.io/f/XXXXXXXX" method="POST" novalidate>
+          <input type="text" name="_gotcha" class="hp-field" tabindex="-1" autocomplete="off" aria-hidden="true">
+          <input type="hidden" name="_subject" value="Novo lead — site InterSaúde">
+
+          <div class="lead-grid">
+            <label class="lead-field">
+              <span>Nome completo *</span>
+              <input type="text" name="nome" required autocomplete="name">
+            </label>
+            <label class="lead-field">
+              <span>Empresa / Razão social *</span>
+              <input type="text" name="empresa" required autocomplete="organization">
+            </label>
+            <label class="lead-field">
+              <span>CNPJ</span>
+              <input type="text" name="cnpj" inputmode="numeric" autocomplete="off" placeholder="00.000.000/0000-00">
+            </label>
+            <label class="lead-field">
+              <span>Cidade / UF *</span>
+              <input type="text" name="cidade" required placeholder="Ex.: Campinas / SP" autocomplete="address-level2">
+            </label>
+            <label class="lead-field">
+              <span>Tipo de estabelecimento *</span>
+              <select name="tipo" required>
+                <option value="" disabled selected>Selecione</option>
+                <option>Farmácia</option>
+                <option>Rede de farmácias</option>
+                <option>Clínica</option>
+                <option>Hospital</option>
+                <option>Distribuidora</option>
+                <option>Outro</option>
+              </select>
+            </label>
+            <label class="lead-field">
+              <span>WhatsApp *</span>
+              <input type="tel" name="whatsapp" required placeholder="(00) 00000-0000" autocomplete="tel">
+            </label>
+            <label class="lead-field">
+              <span>E-mail</span>
+              <input type="email" name="email" autocomplete="email">
+            </label>
+            <label class="lead-field">
+              <span>Volume médio de compra mensal</span>
+              <select name="volume">
+                <option value="" disabled selected>Selecione</option>
+                <option>Até R$ 5.000</option>
+                <option>R$ 5.000 a R$ 20.000</option>
+                <option>R$ 20.000 a R$ 50.000</option>
+                <option>Acima de R$ 50.000</option>
+                <option>Ainda não sei</option>
+              </select>
+            </label>
+            <label class="lead-field lead-field-full">
+              <span>Mensagem</span>
+              <textarea name="mensagem" rows="3" placeholder="Conte um pouco sobre o seu negócio ou a sua necessidade"></textarea>
+            </label>
+          </div>
+
+          <div class="lead-form-actions">
+            <button type="submit" class="btn btn-light magnetic" id="lead-submit">
+              <span class="btn-label">Solicitar atendimento comercial</span>
+            </button>
+            <a href="https://wa.me/5500000000000" class="btn btn-outline-light magnetic" target="_blank" rel="noopener">Falar agora no WhatsApp</a>
+          </div>
+
+          <p class="lead-form-status" id="lead-form-status" role="status" aria-live="polite"></p>
+        </form>
+
+        <p class="contact-note">Atualize e-mail, WhatsApp e endpoint do formulário com os canais oficiais da distribuidora antes de publicar.</p>
       </div>
     </section>
   </main>
@@ -234,6 +471,7 @@
       <a href="#sobre">Sobre</a>
       <a href="#diferenciais">Diferenciais</a>
       <a href="#portfolio">Portfólio</a>
+      <a href="#faq">FAQ</a>
       <a href="#contato">Contato</a>
     </div>
     <p class="footer-copy">© <span id="year"></span> InterSaúde. Todos os direitos reservados.</p>

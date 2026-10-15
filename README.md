@@ -2,6 +2,29 @@
 
 Landing page estática da **InterSaúde Distribuidora de Medicamento**: HTML, CSS e JavaScript vanilla, sem bundler. Visual farmacêutico premium (ícones 3D, tipografia Aventa, vermelho da marca) com scroll cinematográfico em seções-chave, cena **WebGL 3D real** no hero (Three.js via CDN) e camada de polimento (grain, cursor customizado, botões magnéticos, tilt 3D, glow reativo ao cursor).
 
+Além da landing, o site inclui um **funil de conversão**: prova social, FAQ, formulário de lead qualificado (Formspree), página de agradecimento com handoff para WhatsApp, analytics e SEO técnico — ver [Setup de produção](#setup-de-produção--funil-de-conversão) antes de publicar.
+
+---
+
+## Setup de produção / Funil de conversão
+
+A página já está estruturada para captar e qualificar leads, mas roda com **placeholders** que precisam ser substituídos antes de publicar. Nada quebra com os placeholders no lugar (os scripts de analytics carregam sem erro, o formulário cai no fallback de e-mail) — mas nenhum lead de verdade chega até esses itens serem resolvidos:
+
+| Placeholder | Onde | Substituir por |
+| --- | --- | --- |
+| `https://formspree.io/f/XXXXXXXX` | `index.html`, atributo `action` do `#lead-form` | ID real de um formulário criado em [formspree.io](https://formspree.io) (plano free já inclui dashboard de leads, alerta por e-mail e export CSV — é o "painel" do cliente, sem precisar construir um painel custom exposto publicamente) |
+| `G-XXXXXXXXXX` | `index.html` e `obrigado.html`, snippets GA4 | ID de medição real do Google Analytics 4 |
+| `0000000000000000` | `index.html` e `obrigado.html`, snippet do Meta Pixel | ID real do Pixel (Gerenciador de Eventos da Meta) |
+| `https://wa.me/5500000000000` | `#contato` e `obrigado.html` | Número real de WhatsApp comercial, formato `55DDXXXXXXXXX` |
+| `contato@intersaude.com.br` | `#contato` e fallback `mailto:` no `js/main.js` | E-mail comercial real |
+| `https://intersaude.com.br/` | meta tags OG/Twitter, JSON-LD, `robots.txt`, `sitemap.xml` | Domínio real de produção |
+| `[Nome do cliente]` / `[Depoimento real a coletar]` | seção `#depoimentos` | Depoimentos reais — **nunca publicar um depoimento inventado como se fosse de um cliente real** |
+| Endereço no JSON-LD `Organization` | `index.html`, bloco `application/ld+json` | Endereço físico real, se houver (campo não incluído por não ter dado real ainda) |
+
+**Por que não há um painel de leads customizado:** o site é estático, sem backend. Um painel que lê leads de uma planilha/JSON público para "qualquer um ver" ficaria sem autenticação de verdade — expõe nome/telefone/e-mail sem proteção. O dashboard do Formspree entrega o mesmo resultado prático (ver os leads chegando, exportar, ser avisado por e-mail) com segurança de verdade e zero manutenção. Se no futuro fizer sentido um painel com a marca do cliente, isso é um upsell separado (ex: ler a API do Formspree com autenticação própria), não algo para expor sem login.
+
+**Fluxo do lead:** formulário em `#contato` → POST para o Formspree (via `fetch`, com fallback automático para `mailto:` se o endpoint falhar, para o lead nunca se perder) → sucesso redireciona para `obrigado.html?nome=...&tel=...` → página de agradecimento personalizada, com CTA de WhatsApp pré-preenchido e disparo do evento de conversão (`generate_lead` / `Lead`) no destino, evitando contar o mesmo lead duas vezes.
+
 ---
 
 ## Por que a página “fica bonita”
@@ -26,8 +49,11 @@ A tipografia **Aventa** (Medium/Bold) carrega o tom editorial do clone Pharma or
 ```
 inter-saude/
 ├── index.html          # Marcação semântica + importmap do Three.js + script anti-reload-hash
+├── obrigado.html       # Página de agradecimento do funil de lead (noindex)
+├── robots.txt          # Libera indexação, exclui obrigado.html, aponta pro sitemap
+├── sitemap.xml         # Sitemap com a home
 ├── css/styles.css      # Design tokens, layout, motion, responsivo, polimento (grain/cursor/tilt)
-├── js/main.js          # Menu, reveal, scroll sync (diff + pills), logo, cursor/magnético/tilt/glow
+├── js/main.js          # Menu, reveal, scroll sync (diff + pills), FAQ, formulário de lead, logo, cursor/magnético/tilt/glow
 ├── js/hero-scene.js    # Cena WebGL (Three.js) de cápsulas 3D no hero, com fallback para PNG
 ├── fonts/              # Aventa-Medium.otf, Aventa-Bold.otf
 ├── images/             # Logo, favicon, renders 3D, preview/
@@ -95,7 +121,11 @@ Padding extra no último card evita texto colado na borda direita.
 - Grade de previews 3D; hover com leve elevação.
 - Mesmo `hue-rotate` para unificar a paleta Red.
 
-### 7. Cores / pílulas (`#cores`) — scroll no círculo
+### 7. Depoimentos (`#depoimentos`)
+- Faixa horizontal com `scroll-snap` de painéis de cor (`panel-coral` / `panel-blue` / `panel-soft`, mesma paleta do bloco Diferenciais) em vez de cards com borda — mantém a linguagem visual de blocos de cor cheios do resto da página. Um painel carrega `images/toothbrush.png` com o mesmo tratamento `hue-rotate` + `drop-shadow` usado nos outros renders.
+- Placeholders explícitos (`[Nome do cliente]`, `[Depoimento real a coletar]`) — nunca publicar sem substituir por depoimentos reais.
+
+### 8. Cores / pílulas (`#cores`) — scroll no círculo
 Igual espírito do clone Pharma “customise colors”:
 
 1. Seção alta (`.pill-scroll`).
@@ -103,9 +133,16 @@ Igual espírito do clone Pharma “customise colors”:
 3. Track vertical de cápsulas (`pill-blue` tintada / yellow / black) deslocada por `translateY` conforme o scroll.
 4. Headlines trocam classe `.is-active` por faixa de progresso.
 
-### 8. Contato + footer
+### 9. FAQ (`#faq`)
+- Lista editorial numerada (`01`–`06`), sem card com borda/fundo — divisor é um hairline (`border-bottom`) entre itens, igual ao resto da página privilegia tipografia grande em vez de chrome de UI. `button` + `.faq-a-wrap` animado via `grid-template-rows: 0fr → 1fr` (sem medir `scrollHeight` em JS). O indicador de abrir/fechar é um `+` tipográfico (`.faq-toggle`, mesma fonte Aventa) que rotaciona 45° — não um ícone importado. JS só alterna `.is-open` e `aria-expanded` (`js/main.js`).
+
+### 10. Contato + formulário de lead + footer
 - Painel CTA com gradiente vermelho → ink.
-- Links `mailto:` e WhatsApp (placeholders para atualizar).
+- Formulário qualificado (`#lead-form`): nome, empresa, CNPJ, cidade/UF, tipo de estabelecimento, WhatsApp, e-mail, volume de compra, mensagem — mais um honeypot oculto (`_gotcha`) contra spam.
+- Envio via `fetch` para o Formspree, com fallback automático para `mailto:` se o endpoint falhar (o lead nunca se perde) e estado de carregamento no botão.
+- Sucesso redireciona para `obrigado.html?nome=...&tel=...`, que dispara o evento de conversão e oferece handoff direto pro WhatsApp comercial.
+- Botão de WhatsApp direto mantido como alternativa pra quem não quer preencher formulário.
+- Ver [Setup de produção](#setup-de-produção--funil-de-conversão) para os IDs/placeholders a substituir.
 
 ---
 
@@ -149,6 +186,8 @@ Arquivo: `js/main.js`
 | Logo | Se `img` carrega → `.is-ready` e esconde fallback; se erro → texto |
 | Diff horizontal | Progresso do `.diff-pin` → `translateX` + `.is-visible` + dots |
 | Pill circle | Progresso do `.pill-scroll` → `translateY` + headline ativa |
+| FAQ | Toggle `.is-open` + `aria-expanded` por item (`.faq-a-wrap` anima via CSS) |
+| Formulário de lead | `fetch` POST ao Formspree, estado de carregamento, redirect para `obrigado.html`, fallback `mailto:` se o endpoint falhar |
 | `prefers-reduced-motion` | Congela transforms de scroll; revela conteúdo estático |
 
 Há também um script **inline no `<head>`** que aplica a mesma lógica de reload/topo **antes do paint**, reduzindo flash de âncora.
@@ -162,6 +201,7 @@ Há também um script **inline no `<head>`** que aplica a mesma lógica de reloa
 | `images/logo.png` | Header e footer (fundo transparente) |
 | `images/logo.jpg` | Fonte original (referência) |
 | `images/favicon.png` | Favicon / apple-touch (logo guia, 256², transparente) |
+| `images/og-image.png` | Preview social (OG/Twitter), 1200×630 — gerada via Higgsfield AI (`flux_2`), não parte do pack Pharma original |
 | `fonts/Aventa-*.otf` | Display e corpo |
 
 ---
@@ -192,8 +232,11 @@ O menu mobile usa `[hidden] { display: none !important }` para o `display: flex`
 ### Contato
 Em `index.html`, seção Contato:
 
-- `mailto:contato@intersaude.com.br`
-- `https://wa.me/5500000000000`
+- `action` do `#lead-form` → ID real do Formspree
+- `mailto:contato@intersaude.com.br` (aparece aqui e no fallback do `js/main.js`)
+- `https://wa.me/5500000000000` (aparece aqui e em `obrigado.html`)
+
+Checklist completo de placeholders em [Setup de produção](#setup-de-produção--funil-de-conversão).
 
 ### Cores
 Altere `--red*` / `--paper` / `--ink` em `:root`. O resto da UI herda.

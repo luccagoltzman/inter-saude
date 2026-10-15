@@ -232,4 +232,151 @@
       });
     });
   }
+
+  // --- Depoimentos: navegação da faixa horizontal (setas + dots) ---
+  const testimonialsTrack = document.getElementById("testimonials-track");
+  const testimonialPrev = document.getElementById("testimonial-prev");
+  const testimonialNext = document.getElementById("testimonial-next");
+  const testimonialDotsEl = document.getElementById("testimonial-dots");
+  const testimonialPanels = testimonialsTrack
+    ? [...testimonialsTrack.querySelectorAll(".testimonial-panel")]
+    : [];
+
+  if (testimonialsTrack && testimonialPanels.length) {
+    if (testimonialDotsEl) {
+      testimonialDotsEl.innerHTML = testimonialPanels
+        .map((_, i) => `<span${i === 0 ? ' class="is-active"' : ""}></span>`)
+        .join("");
+    }
+    const dots = testimonialDotsEl ? [...testimonialDotsEl.children] : [];
+
+    const scrollToPanel = (index) => {
+      const panel = testimonialPanels[index];
+      if (!panel) return;
+      testimonialsTrack.scrollTo({
+        left: panel.offsetLeft,
+        behavior: reduceMotion ? "auto" : "smooth",
+      });
+    };
+
+    const getActiveIndex = () => {
+      const { scrollLeft } = testimonialsTrack;
+      let closest = 0;
+      let closestDist = Infinity;
+      testimonialPanels.forEach((panel, i) => {
+        const dist = Math.abs(panel.offsetLeft - scrollLeft);
+        if (dist < closestDist) {
+          closestDist = dist;
+          closest = i;
+        }
+      });
+      return closest;
+    };
+
+    const updateNav = () => {
+      const max = testimonialsTrack.scrollWidth - testimonialsTrack.clientWidth - 1;
+      testimonialPrev?.toggleAttribute("disabled", testimonialsTrack.scrollLeft <= 1);
+      testimonialNext?.toggleAttribute("disabled", testimonialsTrack.scrollLeft >= max);
+
+      const active = getActiveIndex();
+      dots.forEach((dot, i) => dot.classList.toggle("is-active", i === active));
+    };
+
+    testimonialPrev?.addEventListener("click", () => {
+      scrollToPanel(Math.max(0, getActiveIndex() - 1));
+    });
+    testimonialNext?.addEventListener("click", () => {
+      scrollToPanel(Math.min(testimonialPanels.length - 1, getActiveIndex() + 1));
+    });
+
+    let updateNavFrame = null;
+    const scheduleUpdateNav = () => {
+      if (updateNavFrame) cancelAnimationFrame(updateNavFrame);
+      updateNavFrame = requestAnimationFrame(updateNav);
+    };
+
+    updateNav();
+    testimonialsTrack.addEventListener("scroll", scheduleUpdateNav, { passive: true });
+    window.addEventListener("resize", scheduleUpdateNav);
+
+    // Recalcula ao entrar na viewport: evita ficar com estado desatualizado
+    // caso o layout mude enquanto a seção ainda não era visível.
+    if ("IntersectionObserver" in window) {
+      const navObserver = new IntersectionObserver((entries) => {
+        entries.forEach((entry) => {
+          if (entry.isIntersecting) scheduleUpdateNav();
+        });
+      }, { threshold: 0.1 });
+      navObserver.observe(testimonialsTrack);
+    }
+  }
+
+  // --- FAQ accordion ---
+  document.querySelectorAll(".faq-item").forEach((item) => {
+    const btn = item.querySelector(".faq-q");
+    btn?.addEventListener("click", () => {
+      const isOpen = item.classList.contains("is-open");
+      item.classList.toggle("is-open", !isOpen);
+      btn.setAttribute("aria-expanded", String(!isOpen));
+    });
+  });
+
+  // --- Formulário de lead: Formspree + fallback mailto, nunca perde o lead ---
+  const leadForm = document.getElementById("lead-form");
+  const leadStatus = document.getElementById("lead-form-status");
+  const leadSubmit = document.getElementById("lead-submit");
+  const leadLabel = leadSubmit?.querySelector(".btn-label");
+
+  leadForm?.addEventListener("submit", async (e) => {
+    e.preventDefault();
+    if (!leadForm.reportValidity()) return;
+
+    const formData = new FormData(leadForm);
+    const nome = String(formData.get("nome") || "").trim();
+    const whatsapp = String(formData.get("whatsapp") || "").trim();
+    const originalLabel = leadLabel?.textContent;
+
+    leadSubmit?.setAttribute("aria-busy", "true");
+    leadSubmit?.setAttribute("disabled", "true");
+    if (leadLabel) leadLabel.textContent = "Enviando…";
+    if (leadStatus) {
+      leadStatus.textContent = "";
+      leadStatus.classList.remove("is-error");
+    }
+
+    try {
+      const response = await fetch(leadForm.action, {
+        method: "POST",
+        body: formData,
+        headers: { Accept: "application/json" },
+      });
+
+      if (!response.ok) throw new Error("Formspree respondeu com erro");
+
+      // Evento de conversão é disparado em obrigado.html (ponto de disparo mais
+      // confiável, página de destino) para não contar o lead duas vezes.
+      const params = new URLSearchParams({ nome, tel: whatsapp });
+      window.location.href = `obrigado.html?${params.toString()}`;
+      return;
+    } catch (err) {
+      const body = [...formData.entries()]
+        .filter(([key]) => !key.startsWith("_"))
+        .map(([key, value]) => `${key}: ${value}`)
+        .join("\n");
+      const mailto = `mailto:contato@intersaude.com.br?subject=${encodeURIComponent(
+        "Novo lead — site InterSaúde"
+      )}&body=${encodeURIComponent(body)}`;
+
+      if (leadStatus) {
+        leadStatus.textContent =
+          "Não foi possível enviar automaticamente. Abrindo seu e-mail com os dados preenchidos — é só enviar.";
+        leadStatus.classList.add("is-error");
+      }
+      window.location.href = mailto;
+    } finally {
+      leadSubmit?.removeAttribute("aria-busy");
+      leadSubmit?.removeAttribute("disabled");
+      if (leadLabel && originalLabel) leadLabel.textContent = originalLabel;
+    }
+  });
 })();
